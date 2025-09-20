@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* globals.css (imported in layout) */
+
+/* base resets (if not present) */
+:root {
+  --bg: #ffffff;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --text: #0f172a;
+  --border: #e6eef8;
+}
+
+/* dark theme overrides */
+.dark {
+  --bg: #0b1220;       /* page background */
+  --card: #0f1724;     /* card background */
+  --muted: #9CA3AF;
+  --text: #e6eef8;
+  --border: #1f2937;
+}
+
+/* apply variables */
+html, body, #__next {
+  height: 100%;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* cards */
+.card-bg {
+  background-color: var(--card);
+  border-color: var(--border);
+}
+
+/* subtle color transition for theme switches */
+.theme-transition {
+  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease;
+}
+
+/* small helper to avoid overflowing flex children */
+.min-w-0 {
+  min-width: 0;
+}
+
+/* optional: style for search input when dark */
+input::placeholder {
+  color: #9ca3af;
+}
