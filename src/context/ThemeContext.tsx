@@ -1,4 +1,3 @@
-// src/context/ThemeContext.tsx
 "use client";
 
 import React from "react";
@@ -76,7 +75,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const resolvedTheme = theme === "system" ? getSystemTheme() : theme;
 
-  // simple style mapping
   const themeStyles =
     resolvedTheme === "dark"
       ? {

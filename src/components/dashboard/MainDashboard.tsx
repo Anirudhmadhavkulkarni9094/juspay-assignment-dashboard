@@ -15,10 +15,10 @@ function MetricCard({ title, value, delta, index }: { title: string; value: stri
     return (
         <div className={`rounded-2xl min-w-fit flex justify-between items-center shadow-sm p-4 h-32 ${theme === 'dark' ? (index === 0 || index === 3) ? "bg-blue-200 text-black" : "bg-gray-600 text-white" : (index == 0 || index == 3) ? "bg-gray-200 text-black" : "bg-white text-black"}`}>
            <div >
-            <div className="text-lg font-bold ">{title}</div>
-            <div className="mt-2 text-2xl font-semibold ">{value}</div>
+            <div className="text-sm font-bold ">{title}</div>
+            <div className="mt-2 text-lg font-semibold ">{value}</div>
            </div>
-            {delta && <div className={`text-md ${parseFloat(delta) < 0 ? "text-red-500" : "text-green-500"} mt-1 flex items-center`}>{delta}%{parseFloat(delta) < 0 ? <TrendingDown/> : <TrendingUp className="w-4 h-4" aria-hidden="true" />}
+            {delta && <div className={`text-xs ${parseFloat(delta) < 0 ? "text-red-500" : "text-green-500"} mt-1 flex items-center`}>{delta}%{parseFloat(delta) < 0 ? <TrendingDown/> : <TrendingUp className="w-4 h-4" aria-hidden="true" />}
 </div>}
         </div>
     );
@@ -49,9 +49,7 @@ export default function MainDashboard() {
             <div className={`${themeStyles.background}`}>
                 <div className="w-full  p-5">
                     <div className="flex justify-between items-start gap-4">
-                        {/* Metrics area — grows to fill available width */}
                         <div className="flex-1">
-                            {/* responsive grid: 1 col on xs, 2 on sm, 4 on lg */}
                             <div className="grid grid-cols-2 gap-4">
                                 {metrics.map((m, i) => (
                                     <MetricCard index={i} key={m.title} title={m.title} value={m.value} delta={m.delta} />
