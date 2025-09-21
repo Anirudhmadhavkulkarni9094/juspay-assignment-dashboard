@@ -1,5 +1,3 @@
----
-
 # 📊 Dashboard UI
 
 A responsive dashboard layout built with **Next.js**, **React**, and **TailwindCSS**, featuring a metrics grid, projections chart, and a right sidebar for notifications, activities, and contacts.
