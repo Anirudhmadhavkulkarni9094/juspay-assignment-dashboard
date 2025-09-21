@@ -95,7 +95,7 @@ export default function ProjectionsBarChart({
   };
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm">
+    <div className=" bg-white rounded-lg p-4 shadow-sm">
       <div className="text-sm text-gray-500 mb-3">Projections vs Actuals</div>
       <div className="h-48">
         <Bar data={data} options={options} />

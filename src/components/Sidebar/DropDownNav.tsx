@@ -32,6 +32,19 @@ export default function DropDownNav({
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const buttonRef = React.useRef<HTMLButtonElement | null>(null);
 
+  const {theme,  themeStyles } = useTheme();
+
+  // Safe fallbacks for theme keys
+  const containerText = themeStyles?.text || "text-gray-900";
+  const cardBg =  "bg-transparent";
+  const muted = themeStyles?.muted || "text-gray-500";
+  const border = themeStyles?.border || "border-gray-200";
+  // Optional accent key — recommended to add to ThemeContext if you want a specific accent color
+  // e.g. themeStyles.accent = "bg-indigo-500"
+  // fallback to a sensible Tailwind accent if not provided
+  // (we access via any because ThemeContext currently doesn't declare `accent`)
+  const accent = (themeStyles as any)?.accent || "bg-gray-500";
+
   React.useEffect(() => {
     function onDocClick(e: MouseEvent) {
       if (!rootRef.current) return;
@@ -89,11 +102,11 @@ export default function DropDownNav({
       />
     </svg>
   );
-
-    const { theme, resolvedTheme, toggleTheme, themeStyles } = useTheme();
+  const bgMatch = (cardBg || "").match(/\bbg-[^\s]+/);
+const groupHoverCard = bgMatch ? `group-hover:${bgMatch[0]}` : "";
 
   return (
-    <div ref={rootRef} className={`w-full ${themeStyles.text}`}>
+    <div ref={rootRef} className={`w-full ${containerText}`}>
       {isDropdown ? (
         <>
           <button
@@ -102,29 +115,29 @@ export default function DropDownNav({
             aria-expanded={isOpen}
             aria-controls={`${slug.replace(/\W/g, "-")}-submenu`}
             onClick={() => setIsOpen((s) => !s)}
-            className="flex items-center w-fit px-1 py-1 text-left focus:outline-none focus-visible:ring-2 focus-visible:bg-gray-400 rounded-md"
+            className={`flex items-center w-fit px-1 py-1 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 rounded-md ${containerText}`}
           >
-            <span className="flex-shrink-0  mr-2">
+            <span className="flex-shrink-0 mr-2">
+              {/* Chevron inherits currentColor, which is controlled by containerText */}
               {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             </span>
 
-            <span className="w-7 h-7 flex items-center justify-center rounded-sm flex-shrink-0 bg-white dark:bg-slate-800 mr-3">
+            <span className={`w-7 h-7 flex items-center text-white justify-center rounded-sm flex-shrink-0 mr-3 ${cardBg} ${containerText}`}>
               {title.Icon ? (
                 <Image
                   src={title.Icon}
                   alt={`${title.label} icon`}
                   width={18}
                   height={18}
-                  className="object-contain"
+                  color="white"
+                  className={`object-contain ${theme=== "dark" ? "invert" : ""}`}
                 />
               ) : (
                 FallbackIcon
               )}
             </span>
 
-            <span className="ml-1 text-sm font-medium dark:hover:text-white ">
-              {title.label}
-            </span>
+            <span className={`ml-1 text-sm font-medium ${containerText}`}>{title.label}</span>
           </button>
 
           {isOpen && hasOptions && (
@@ -142,7 +155,7 @@ export default function DropDownNav({
                     <li key={opt}>
                       <Link
                         href={optSlug}
-                        className="block w-full text-sm   dark:hover:text-white focus:outline-none"
+                        className={`block w-full text-sm ${containerText} ${muted} hover:${containerText} focus:outline-none`}
                       >
                         {opt}
                       </Link>
@@ -155,31 +168,35 @@ export default function DropDownNav({
         </>
       ) : (
         <Link href={slug} className="relative block group">
-          {/* accent bar on hover */}
-          <span
-            aria-hidden
-            className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-gray-100 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity"
-          />
-          <div className="flex items-center gap-4 w-full px-4 py-3 rounded-full bg-transparent group-hover:bg-gray-700 dark:group-hover:bg-slate-800 dark:hover:text-white transition-colors">
-            <span className="flex items-center justify-center rounded-sm flex-shrink-0 bg-white dark:bg-slate-800 transition-transform group-hover:scale-105">
-              {title.Icon ? (
-                <Image
-                  src={title.Icon}
-                  alt={`${title.label} icon`}
-                  width={24}
-                  height={24}
-                  className="object-contain"
-                />
-              ) : (
-                FallbackIcon
-              )}
-            </span>
+  {/* accent bar on hover — uses theme `accent` if available */}
+  <span
+    aria-hidden
+    className={`absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity ${accent}`}
+  />
+  <div
+    className={`flex items-center gap-4 w-full px-4 py-3 rounded-full bg-transparent ${cardBg} ${groupHoverCard} transition-colors`}
+    // keep the element focusable for keyboard users via the Link wrapper
+  >
+   <span
+  className={`flex items-center justify-center rounded-sm flex-shrink-0 p-1 ${cardBg} ${containerText} transition-transform group-hover:scale-105`}
+  aria-hidden
+>
+  {title.Icon ? (
+    <Image
+      src={title.Icon}
+      alt={`${title.label} icon`}
+      width={24}
+      height={24}
+      className={`object-contain ${theme=== "dark" ? "invert" : ""}`}
+    />
+  ) : (
+    FallbackIcon
+  )}
+</span>
 
-            <span className="ml-1 text-sm font-medium ">
-              {title.label}
-            </span>
-          </div>
-        </Link>
+    <span className={`ml-1 text-sm font-medium ${containerText}`}>{title.label}</span>
+  </div>
+</Link>
       )}
     </div>
   );

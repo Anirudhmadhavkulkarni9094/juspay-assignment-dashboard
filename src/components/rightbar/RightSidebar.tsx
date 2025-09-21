@@ -34,6 +34,11 @@ interface RightSidebarProps {
   className?: string;
 }
 
+function getRandomAvatarUrl(seed?: number) {
+  const id = seed ? ((seed % 70) + 1) : Math.floor(Math.random() * 70) + 1;
+  return `https://i.pravatar.cc/150?img=${id}`;
+}
+
 function Avatar({
   src,
   alt,
@@ -112,10 +117,10 @@ export default function RightSidebar({
       { id: "c5", name: "Kate Morrison", avatarUrl: undefined },
       { id: "c6", name: "Koray Okumus", avatarUrl: undefined },
     ];
-  const { theme, resolvedTheme, toggleTheme, themeStyles } = useTheme();
+  const { themeStyles } = useTheme();
 
   return (
-    <aside className={`flex-shrink-0 w-72 ${themeStyles.background} ${themeStyles.text}  ${className}`}>
+    <aside className={` border border-l  border-gray-600 flex-shrink-0 w-72 ${themeStyles.background} ${themeStyles.text}  ${className}`}>
       <div className="h-full flex flex-col p-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
@@ -129,7 +134,7 @@ export default function RightSidebar({
           <div className="space-y-3">
             {sampleNotifications.map((n) => (
               <div key={n.id} className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-md flex items-center justify-center flex-shrink-0 border ">
+                <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border ">
                   {/* icon or a small avatar */}
                   {n.icon ?? <Bell className="w-4 h-4 " />}
                 </div>
@@ -150,7 +155,7 @@ export default function RightSidebar({
             <div className="space-y-3">
               {sampleActivities.map((a) => (
                 <div key={a.id} className="flex items-start gap-3">
-                  <Avatar src={a.avatarUrl} alt={a.title} size={36} />
+                  <Avatar src={getRandomAvatarUrl()} alt={a.title} size={36} />
 
                   <div className="flex-1 min-w-0">
                     <div className="text-sm ">{a.title}</div>
@@ -168,7 +173,7 @@ export default function RightSidebar({
               <ul className="space-y-2">
                 {sampleContacts.map((c) => (
                   <li key={c.id} className="flex items-center gap-3 px-2 py-1 rounded hover:bg-gray-400">
-                    <Avatar src={c.avatarUrl} alt={c.name} size={36} />
+                    <Avatar src={getRandomAvatarUrl()} alt={c.name} size={36} />
                     <div>
                       <div className="text-sm ">{c.name}</div>
                       {c.role && <div className="text-xs ">{c.role}</div>}

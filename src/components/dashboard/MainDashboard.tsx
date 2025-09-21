@@ -2,43 +2,38 @@
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
 import ProjectionsBarChart from "./ProjectionsBarChart";
 import RevenueLineChart from "./RevenueLineChart";
 import RevenueByLocation from "./RevenueByLocation";
-import DonutPercent from "./DonutPercent";
 import SegmentedDonut from "./SegmentedDonut";
 import { useTheme } from "@/context/ThemeContext";
-
-/**
- * Dynamic imports for client-only chart/map components (avoid SSR errors).
- * Each file should be a client component (have "use client") and export default the chart.
- */
-
+import { TrendingDown, TrendingUp } from "lucide-react";
 
 function MetricCard({ title, value, delta, index }: { title: string; value: string; delta?: string, index: number }) {
-    const { theme, themeStyles } = useTheme();
+    const { theme } = useTheme();
 
     return (
-        <div className={`rounded-lg shadow-sm p-4 h-32 ${theme === 'dark' ? (index === 0 || index === 3) ? "bg-blue-200 text-black" : "bg-gray-600 text-white" : (index == 0 || index == 3) ? "bg-gray-200 text-black" : "bg-white text-black"}`}>
-            <div className="text-xs ">{title}</div>
+        <div className={`rounded-2xl min-w-fit flex justify-between items-center shadow-sm p-4 h-32 ${theme === 'dark' ? (index === 0 || index === 3) ? "bg-blue-200 text-black" : "bg-gray-600 text-white" : (index == 0 || index == 3) ? "bg-gray-200 text-black" : "bg-white text-black"}`}>
+           <div >
+            <div className="text-lg font-bold ">{title}</div>
             <div className="mt-2 text-2xl font-semibold ">{value}</div>
-            {delta && <div className="text-xs text-green-600 mt-1">{delta}</div>}
+           </div>
+            {delta && <div className={`text-md ${parseFloat(delta) < 0 ? "text-red-500" : "text-green-500"} mt-1 flex items-center`}>{delta}%{parseFloat(delta) < 0 ? <TrendingDown/> : <TrendingUp className="w-4 h-4" aria-hidden="true" />}
+</div>}
         </div>
     );
 }
 
-/* lightweight skeleton shown while charts load */
 function ChartSkeleton() {
     return <div className="h-56 bg-gray-50 rounded border border-dashed animate-pulse" />;
 }
 
 export default function MainDashboard() {
     const metrics = [
-        { title: "Customers", value: "3,781", delta: "+11.01%" },
-        { title: "Orders", value: "1,219", delta: "-0.03%" },
-        { title: "Revenue", value: "$695", delta: "+6.03%" },
-        { title: "Growth", value: "30.1%", delta: "+6.00%" },
+        { title: "Customers", value: "3,781", delta: "11.01" },
+        { title: "Orders", value: "1,219", delta: "-0.03" },
+        { title: "Revenue", value: "$695", delta: "6.03" },
+        { title: "Growth", value: "30.1%", delta: "6.00" },
     ];
 
     const products = [
@@ -47,7 +42,7 @@ export default function MainDashboard() {
         { name: "Half Sleeve Shirt", price: "$25.00", qty: 64, amount: "$1,600.00" },
         { name: "Bright Jacket", price: "$110.00", qty: 14, amount: "$1,540.00" },
     ];
-    const { theme, resolvedTheme, toggleTheme, themeStyles } = useTheme();
+    const { theme, themeStyles } = useTheme();
 
     return (
         <>
@@ -65,7 +60,7 @@ export default function MainDashboard() {
                         </div>
                         {/* Projections card — fixed size on md+ and hidden on small screens (you can change behavior) */}
                         <div className="hidden md:flex md:flex-shrink-0 md:items-start">
-                            <div className="w-96 rounded-md p-2 shadow-none">
+                            <div className=" rounded-md p-2 shadow-none">
                                 <React.Suspense fallback={<ChartSkeleton />}>
                                     <ProjectionsBarChart />
                                 </React.Suspense>

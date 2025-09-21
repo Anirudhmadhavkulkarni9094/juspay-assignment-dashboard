@@ -1,35 +1,72 @@
 // components/OrderList.tsx
 "use client";
 
+import Image from "next/image";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
 import { useTheme } from "@/context/ThemeContext";
 
 type Order = {
   id: string;
-  user: { name: string; avatar?: string };
+  user: { name: string; avatar?: string | null };
   project: string;
   address: string;
   date: string; // friendly text
   status: "In Progress" | "Complete" | "Pending" | "Approved" | "Rejected";
 };
 
-const SAMPLE: Order[] = [
-  { id: "#CM9801", user: { name: "Natali Craig" }, project: "Landing Page", address: "Meadow Lane Oakland", date: "Just now", status: "In Progress" },
-  { id: "#CM9802", user: { name: "Kate Morrison" }, project: "CRM Admin pages", address: "Larry San Francisco", date: "A minute ago", status: "Complete" },
-  { id: "#CM9803", user: { name: "Drew Cano" }, project: "Client Project", address: "Bagwell Avenue Ocala", date: "1 hour ago", status: "Pending" },
-  { id: "#CM9804", user: { name: "Orlondo Diggs" }, project: "Admin Dashboard", address: "Washburn Baton Rouge", date: "Yesterday", status: "Approved" },
-  { id: "#CM9805", user: { name: "Andi Lane" }, project: "App Landing Page", address: "Nest Lane Olivette", date: "Feb 2, 2023", status: "Rejected" },
-  // (kept the rest of sample items)
-  { id: "#CM9806", user: { name: "Natalie Craig" }, project: "Landing Page", address: "Meadow Lane Oakland", date: "Just now", status: "In Progress" },
-  { id: "#CM9807", user: { name: "Kate Morrison" }, project: "CRM Admin pages", address: "Larry San Francisco", date: "A minute ago", status: "Complete" },
-  { id: "#CM9808", user: { name: "Drew Cano" }, project: "Client Project", address: "Bagwell Avenue Ocala", date: "1 hour ago", status: "Pending" },
-  { id: "#CM9809", user: { name: "Orlondo Diggs" }, project: "Admin Dashboard", address: "Washburn Baton Rouge", date: "Yesterday", status: "Approved" },
-  { id: "#CM9810", user: { name: "Andi Lane" }, project: "App Landing Page", address: "Nest Lane Olivette", date: "Feb 2, 2023", status: "Rejected" },
+const SAMPLE_BASE: Omit<Order, "user">[] = [
+  { id: "#CM9801", project: "Landing Page", address: "Meadow Lane Oakland", date: "Just now", status: "In Progress" },
+  { id: "#CM9802", project: "CRM Admin pages", address: "Larry San Francisco", date: "A minute ago", status: "Complete" },
+  { id: "#CM9803", project: "Client Project", address: "Bagwell Avenue Ocala", date: "1 hour ago", status: "Pending" },
+  { id: "#CM9804", project: "Admin Dashboard", address: "Washburn Baton Rouge", date: "Yesterday", status: "Approved" },
+  { id: "#CM9805", project: "App Landing Page", address: "Nest Lane Olivette", date: "Feb 2, 2023", status: "Rejected" },
+  { id: "#CM9806", project: "Landing Page", address: "Meadow Lane Oakland", date: "Just now", status: "In Progress" },
+  { id: "#CM9807", project: "CRM Admin pages", address: "Larry San Francisco", date: "A minute ago", status: "Complete" },
+  { id: "#CM9808", project: "Client Project", address: "Bagwell Avenue Ocala", date: "1 hour ago", status: "Pending" },
+  { id: "#CM9809", project: "Admin Dashboard", address: "Washburn Baton Rouge", date: "Yesterday", status: "Approved" },
+  { id: "#CM9810", project: "App Landing Page", address: "Nest Lane Olivette", date: "Feb 2, 2023", status: "Rejected" },
+  { id: "#CM9801", project: "Landing Page", address: "Meadow Lane Oakland", date: "Just now", status: "In Progress" },
+  { id: "#CM9802", project: "CRM Admin pages", address: "Larry San Francisco", date: "A minute ago", status: "Complete" },
+  { id: "#CM9803", project: "Client Project", address: "Bagwell Avenue Ocala", date: "1 hour ago", status: "Pending" },
+  { id: "#CM9804", project: "Admin Dashboard", address: "Washburn Baton Rouge", date: "Yesterday", status: "Approved" },
+  { id: "#CM9805", project: "App Landing Page", address: "Nest Lane Olivette", date: "Feb 2, 2023", status: "Rejected" },
+  { id: "#CM9806", project: "Landing Page", address: "Meadow Lane Oakland", date: "Just now", status: "In Progress" },
+  { id: "#CM9807", project: "CRM Admin pages", address: "Larry San Francisco", date: "A minute ago", status: "Complete" },
+  { id: "#CM9808", project: "Client Project", address: "Bagwell Avenue Ocala", date: "1 hour ago", status: "Pending" },
+  { id: "#CM9809", project: "Admin Dashboard", address: "Washburn Baton Rouge", date: "Yesterday", status: "Approved" },
+  { id: "#CM9810", project: "App Landing Page", address: "Nest Lane Olivette", date: "Feb 2, 2023", status: "Rejected" },
+  { id: "#CM9801", project: "Landing Page", address: "Meadow Lane Oakland", date: "Just now", status: "In Progress" },
+  { id: "#CM9802", project: "CRM Admin pages", address: "Larry San Francisco", date: "A minute ago", status: "Complete" },
+  { id: "#CM9803", project: "Client Project", address: "Bagwell Avenue Ocala", date: "1 hour ago", status: "Pending" },
+  { id: "#CM9804", project: "Admin Dashboard", address: "Washburn Baton Rouge", date: "Yesterday", status: "Approved" },
+  { id: "#CM9805", project: "App Landing Page", address: "Nest Lane Olivette", date: "Feb 2, 2023", status: "Rejected" },
+  { id: "#CM9806", project: "Landing Page", address: "Meadow Lane Oakland", date: "Just now", status: "In Progress" },
+  { id: "#CM9807", project: "CRM Admin pages", address: "Larry San Francisco", date: "A minute ago", status: "Complete" },
+  { id: "#CM9808", project: "Client Project", address: "Bagwell Avenue Ocala", date: "1 hour ago", status: "Pending" },
+  { id: "#CM9809", project: "Admin Dashboard", address: "Washburn Baton Rouge", date: "Yesterday", status: "Approved" },
+  { id: "#CM9810", project: "App Landing Page", address: "Nest Lane Olivette", date: "Feb 2, 2023", status: "Rejected" },
 ];
 
+const SAMPLE_NAMES = [
+  "Natali Craig",
+  "Kate Morrison",
+  "Drew Cano",
+  "Orlondo Diggs",
+  "Andi Lane",
+  "Natalie Craig",
+  "Kate Morrison",
+  "Drew Cano",
+  "Orlondo Diggs",
+  "Andi Lane",
+];
+
+function getRandomAvatarUrl(seed?: number) {
+  const id = seed ? ((seed % 70) + 1) : Math.floor(Math.random() * 70) + 1;
+  return `https://i.pravatar.cc/150?img=${id}`;
+}
+
 function StatusPill({ status }: { status: Order["status"] }) {
-  // full literal Tailwind classes so JIT picks them up
   const colorDot: Record<Order["status"], string> = {
     "In Progress": "bg-indigo-500",
     Complete: "bg-emerald-500",
@@ -54,13 +91,54 @@ function StatusPill({ status }: { status: Order["status"] }) {
   );
 }
 
+export function Avatar({ name, src }: { name: string; src?: string | null }) {
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  if (src) {
+    return (
+      <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+        <Image src={src} alt={name} width={32} height={32} className="object-cover w-8 h-8" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 select-none font-medium bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-100">
+      {initials}
+    </div>
+  );
+}
+
 export default function OrderList() {
   const { themeStyles } = useTheme();
-  const [rows] = React.useState<Order[]>(SAMPLE);
+  const [rows, setRows] = React.useState<Order[] | null>(null);
   const [query, setQuery] = React.useState("");
   const [selected, setSelected] = React.useState<Record<string, boolean>>({});
   const [page, setPage] = React.useState(1);
   const perPage = 10;
+
+  React.useEffect(() => {
+    const r: Order[] = SAMPLE_BASE.map((base, idx) => {
+      const name = SAMPLE_NAMES[idx] ?? `User ${idx + 1}`;
+      const avatar = getRandomAvatarUrl();
+      return {
+        id: base.id,
+        user: { name, avatar },
+        project: base.project,
+        address: base.address,
+        date: base.date,
+        status: base.status,
+      };
+    });
+    setRows(r);
+  }, []);
+
+  if (!rows) return null;
 
   const filtered = rows.filter(
     (r) =>
@@ -84,69 +162,46 @@ export default function OrderList() {
     setSelected(copy);
   }
 
+  const border = themeStyles.border;
+  const card = themeStyles.card;
+  const text = themeStyles.text;
+  const muted = themeStyles.muted;
+
   return (
-    <div className={`rounded-lg w-full p-4 border ${themeStyles.border} ${themeStyles.card} ${themeStyles.text} theme-transition`}>
+    <div className={` w-full p-4 border ${border} ${card} ${text} theme-transition`}>
       <div className="flex items-center justify-between mb-3">
         <div className="font-semibold text-lg">Order List</div>
-
-        {/* toolbar: actions + search */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <button className={`p-2 rounded ${themeStyles.muted}`} title="Add" aria-label="Add">
-              <svg className={`w-4 h-4`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-            </button>
-
-            <button className={`p-2 rounded ${themeStyles.muted}`} title="Filter" aria-label="Filter">
-              <svg className={`w-4 h-4`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M3 5h18M7 11h10M10 17h4" />
-              </svg>
-            </button>
-
-            <button className={`p-2 rounded ${themeStyles.muted}`} title="Sort" aria-label="Sort">
-              <svg className={`w-4 h-4 `} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M3 6h12M3 12h18M3 18h6" />
-              </svg>
-            </button>
-          </div>
-
-          <div className={`relative`}>
-            <input
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search orders"
-              className={`pl-8 pr-3 py-2 rounded-full text-sm w-56 focus:outline-none focus:ring-1 focus:ring-sky-300 bg-transparent border ${themeStyles.border} ${themeStyles.text}`}
-            />
-            <div className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
-                <circle cx="11" cy="11" r="6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
+        <div className="relative">
+          <input
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
+            placeholder="Search orders"
+            className={`pl-8 pr-3 py-2 rounded-full text-sm w-56 focus:outline-none focus:ring-1 focus:ring-sky-300 bg-transparent border ${border} ${text}`}
+          />
+          <div className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
+              <circle cx="11" cy="11" r="6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </div>
         </div>
       </div>
 
       {/* table header */}
-      <div className={`border-t ${themeStyles.border} border-b ${themeStyles.border}`}>
-        <div className="grid grid-cols-[48px_200px_1fr_2fr_160px_140px_64px] gap-4 items-center text-xs text-gray-400 py-3 px-2">
+      <div className={`border-t ${border} border-b ${border}`}>
+        <div className={`grid grid-cols-[48px_120px_200px_1fr_2fr_160px_140px] gap-4 items-center text-xs ${muted} py-3 px-2`}>
           <div className="pl-2">
-            <input
-              type="checkbox"
-              onChange={toggleAll}
-              checked={paged.length > 0 && paged.every((r) => selected[r.id])}
-            />
+            <input type="checkbox" onChange={toggleAll} checked={paged.length > 0 && paged.every((r) => selected[r.id])} />
           </div>
+          <div>Order ID</div>
           <div>User</div>
           <div>Project</div>
           <div>Address</div>
           <div>Date</div>
           <div>Status</div>
-          <div className="text-right pr-2">Actions</div>
         </div>
       </div>
 
@@ -155,55 +210,36 @@ export default function OrderList() {
         {paged.map((row) => (
           <div
             key={row.id}
-            className={`grid grid-cols-[48px_200px_1fr_2fr_160px_140px_64px] gap-4 items-center py-3 px-2 transition-colors rounded ${themeStyles.card} hover:${themeStyles.muted} group`}
+            className={`grid grid-cols-[48px_120px_200px_1fr_2fr_160px_140px] gap-4 items-center py-3 px-2 transition-colors rounded ${card} hover:${muted} group`}
           >
             <div className="pl-2">
               <input type="checkbox" checked={!!selected[row.id]} onChange={() => toggleRow(row.id)} />
             </div>
-
+            <div className="text-sm font-medium">{row.id}</div>
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-sm font-medium text-gray-600 dark:text-gray-200">
-                {row.user.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
-              </div>
+              <Avatar name={row.user.name} src={row.user.avatar} />
               <div className="text-sm font-medium">{row.user.name}</div>
             </div>
-
             <div className="text-sm">{row.project}</div>
-            <div className="text-sm text-gray-500">{row.address}</div>
-            <div className="text-sm text-gray-400 flex items-center gap-2">
+            <div className={`text-sm ${muted}`}>{row.address}</div>
+            <div className={`text-sm ${muted} flex items-center gap-2`}>
               <Calendar className="w-4 h-4" />
               <span>{row.date}</span>
             </div>
-
             <div>
               <StatusPill status={row.status} />
-            </div>
-
-            <div className="text-right pr-2">
-              <button className={`p-1 rounded ${themeStyles.muted}`} aria-label="Go">
-                <svg className={`w-4 h-4 `} viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* footer: pagination */}
-      <div className={`flex items-center justify-between mt-4 pt-3 border-t ${themeStyles.border}`}>
-        <div className="text-sm text-gray-500">{filtered.length} results</div>
-
+      {/* footer */}
+      <div className={`flex items-center justify-between mt-4 pt-3 border-t ${border}`}>
+        <div className={`text-sm ${muted}`}>{filtered.length} results</div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className={`px-3 py-1 rounded ${themeStyles.muted}`}
-            disabled={page === 1}
-            aria-label="Previous page"
-          >
-            <ChevronLeft className={`w-4 h-4 `} />
+          <button onClick={() => setPage((p) => Math.max(1, p - 1))} className={`px-3 py-1 rounded ${muted}`} disabled={page === 1}>
+            <ChevronLeft className="w-4 h-4" />
           </button>
-
           {Array.from({ length: totalPages }).map((_, i) => {
             const idx = i + 1;
             const active = idx === page;
@@ -211,21 +247,18 @@ export default function OrderList() {
               <button
                 key={idx}
                 onClick={() => setPage(idx)}
-                className={`px-3 py-1 rounded ${active ? "bg-gray-200 dark:bg-slate-700 text-black dark:text-white" : `${themeStyles.muted}`}`}
-                aria-current={active ? "page" : undefined}
+                className={`px-3 py-1 rounded ${active ? "bg-gray-200 dark:bg-slate-700 text-black dark:text-white" : muted}`}
               >
                 {idx}
               </button>
             );
           })}
-
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className={`px-3 py-1 rounded ${themeStyles.muted}`}
+            className={`px-3 py-1 rounded ${muted}`}
             disabled={page === totalPages}
-            aria-label="Next page"
           >
-            <ChevronRight className={`w-4 h-4 `} />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>

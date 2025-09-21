@@ -20,7 +20,7 @@ export default function Shell({ children }: ShellProps) {
     return (
         <div className="min-h-screen flex bg-gray-50">
             {isSidebarOpen && <Sidebar />}
-            <div className="w-full">
+            <div className={`w-full ${theme === "dark" ? "bg-gray-900" : ""}`}>
 
             <Navbar
                 toggleSidebar={() => setIsSidebarOpen((s) => !s)}
@@ -28,7 +28,7 @@ export default function Shell({ children }: ShellProps) {
                 />
 
             <div className="">
-                <main className={`transition-all duration-300 ease-in-out ${themeStyles.background} ${themeStyles.text}`}>
+                <main className={`transition-all duration-300 ease-in-out ${themeStyles.text}`}>
                     {children}
                 </main>
             </div>

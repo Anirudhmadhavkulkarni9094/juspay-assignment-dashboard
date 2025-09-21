@@ -55,7 +55,7 @@ const recent = [
 export default function Sidebar() {
     const { themeStyles } = useTheme();
 
-  return <div className={`w-fit ${themeStyles.background} min-h-screen`}>
+  return <div className={`w-fit ${themeStyles.background} min-h-screen border-r border-gray-700`}>
     <ProfileTab></ProfileTab>
     <HistoryTab favorites={favorites} recent={recent}></HistoryTab>
     <SideBarSection sections={sections} className="min-h-screen" />
